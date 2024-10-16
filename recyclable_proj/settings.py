@@ -24,10 +24,10 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '{KbaoFqdaX+2lflH&CDE)@I@u+7)hi=dibLeH}ufMR<HZ1oDc'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'recyclable_proj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'demo',
-        'USER': 'db_user',
-        'PASSWORD': 'f4K20jJb#5',
-        'HOST': 'localhost',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': '{{rds_host}}',
         'PORT': '5432',
     }
 }
