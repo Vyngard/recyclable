@@ -1,0 +1,310 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Container
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Container {{ barcode }}</h1>
+
+
+    <p class="alert alert-info">
+        {{ message }}
+    </p>
+
+    <form action="{% url 'recyclable:num_images'%}" method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="barcode" class="form-label">Barcode:</label>
+            <input id="barcode" type="text" name="barcode" value="{{ barcode }}" class="form-control" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="brand" class="form-label">Brand name:</label>
+            <input id="brand" type="text" name="brand" value="{{ container.brand }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="product_name" class="form-label">Product name:</label>
+            <input id="product_name" type="text" name="product_name" value="{{ container.product_name }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="material_type" class="form-label">Material Type:</label>
+            <select id="material_type" name="material_type" class="form-select">
+                {% for material_type in material_types %}
+                    <option value="{{ material_type.0 }}" {% if container.material_type == material_type.0 %}selected{% endif %}>
+                        {{ material_type.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="plastic_code" class="form-label">Plastic Code:</label>
+            <select id="plastic_code" name="plastic_code" class="form-select">
+                {% for plastic_code in plastic_codes %}
+                    <option value="{{ plastic_code.0 }}" {% if container.plastic_code == plastic_code.0 %}selected{% endif %}>
+                        {{ plastic_code.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="rigidity" class="form-label">Rigidity:</label>
+            <select id="rigidity" name="rigidity" class="form-select">
+                {% for rigidity in rigidity_types %}
+                    <option value="{{ rigidity.0 }}" {% if container.rigidity == rigidity.0 %}selected{% endif %}>
+                        {{ rigidity.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="shape" class="form-label">Shape:</label>
+            <select id="shape" name="shape" class="form-select">
+                {% for shape in shape_types %}
+                    <option value="{{ shape.0 }}" {% if container.shape == shape.0 %}selected{% endif %}>
+                        {{ shape.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="content_type" class="form-label">Content Type:</label>
+            <select id="content_type" name="content_type" class="form-select">
+                {% for content_type in content_types %}
+                    <option value="{{ content_type.0 }}" {% if container.content_type == content_type.0 %}selected{% endif %}>
+                        {{ content_type.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="hazardous" class="form-label">Hazardous:</label>
+            <select id="hazardous" name="hazardous" class="form-select">
+                {% for hazardous in hazardous_choices %}
+                    <option value="{{ hazardous.0 }}" {% if container.hazardous == hazardous.0 %}selected{% endif %}>
+                        {{ hazardous.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="beverage_type" class="form-label">Beverage Type:</label>
+            <select id="beverage_type" name="beverage_type" class="form-select">
+                {% for beverage_type in beverage_types %}
+                    <option value="{{ beverage_type.0 }}" {% if container.beverage_type == beverage_type.0 %}selected{% endif %}>
+                        {{ beverage_type.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="alcohol_percentage" class="form-label">Alcohol Percentage:</label>
+            <input id="alcohol_percentage" type="number" step="0.1" name="alcohol_percentage" value="{{ container.alcohol_percentage }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="alcoholic" class="form-label">Alcoholic:</label>
+            <select id="alcoholic" name="alcoholic" class="form-select">
+                {% for alcoholic in alcoholic_choices %}
+                    <option value="{{ alcoholic.0 }}" {% if container.alcoholic == alcoholic.0 %}selected{% endif %}>
+                        {{ alcoholic.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="alcoholic_drinks_type" class="form-label">Alcoholic Drinks Type:</label>
+            <select id="alcoholic_drinks_type" name="alcoholic_drinks_type" class="form-select">
+                {% for alcoholic_drinks_type in alcoholic_drinks_types %}
+                    <option value="{{ alcoholic_drinks_type.0 }}" {% if container.alcoholic_drinks_type == alcoholic_drinks_type.0 %}selected{% endif %}>
+                        {{ alcoholic_drinks_type.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="wine_bottle_shape" class="form-label">Wine Bottle Shape:</label>
+            <select id="wine_bottle_shape" name="wine_bottle_shape" class="form-select">
+                {% for wine_bottle_shape in wine_bottle_shapes %}
+                    <option value="{{ wine_bottle_shape.0 }}" {% if container.wine_bottle_shape == wine_bottle_shape.0 %}selected{% endif %}>
+                        {{ wine_bottle_shape.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="wine_type" class="form-label">Wine Type:</label>
+            <select id="wine_type" name="wine_type" class="form-select">
+                {% for wine_type in wine_types %}
+                    <option value="{{ wine_type.0 }}" {% if container.wine_type == wine_type.0 %}selected{% endif %}>
+                        {{ wine_type.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="liquid_volume" class="form-label">Liquid Volume:</label>
+            <input id="liquid_volume" type="number" name="liquid_volume" value="{{ container.liquid_volume|default_if_none:0.0 }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="liquid_volume_unit" class="form-label">Liquid Volume Unit:</label>
+            <select id="liquid_volume_unit" name="liquid_volume_unit" class="form-select">
+                {% for liquid_volume_unit in liquid_volume_units %}
+                    <option value="{{ liquid_volume_unit.0 }}" {% if container.liquid_volume_unit == liquid_volume_unit.0 %}selected{% endif %}>
+                        {{ liquid_volume_unit.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="mass_gram" class="form-label">Mass (gram):</label>
+            <input id="mass_gram" type="number" name="mass_gram" value="{{ container.mass_gram }}" class="form-control">
+        </div>
+
+<!--    states    -->
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="ca" name="ca" {% if container.ca %}checked{% endif %}>
+            <label class="form-check-label" for="ca">CA</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="ct" name="ct" {% if container.ct %}checked{% endif %}>
+            <label class="form-check-label" for="ct">CT</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gu" name="gu" {% if container.gu %}checked{% endif %}>
+            <label class="form-check-label" for="gu">GU</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="hi" name="hi" {% if container.hi %}checked{% endif %}>
+            <label class="form-check-label" for="hi">HI</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="ia" name="ia" {% if container.ia %}checked{% endif %}>
+            <label class="form-check-label" for="ia">IA</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="me" name="me" {% if container.me %}checked{% endif %}>
+            <label class="form-check-label" for="me">ME</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="ma" name="ma" {% if container.ma %}checked{% endif %}>
+            <label class="form-check-label" for="ma">MA</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="mi" name="mi" {% if container.mi %}checked{% endif %}>
+            <label class="form-check-label" for="mi">MI</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="ny" name="ny" {% if container.ny %}checked{% endif %}>
+            <label class="form-check-label" for="ny">NY</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="Or" name="Or" {% if container.Or %}checked{% endif %}>
+            <label class="form-check-label" for="Or">OR</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="vt" name="vt" {% if container.vt %}checked{% endif %}>
+            <label class="form-check-label" for="vt">VT</label>
+        </div>
+
+
+<!--    end of states    -->
+
+        <div class="mb-3">
+            <label for="made_in" class="form-label">Made In:</label>
+            <select id="made_in" name="made_in" class="form-select">
+                {% for made_in in made_in_choices %}
+                    <option value="{{ made_in.0 }}" {% if container.made_in == made_in.0 %}selected{% endif %}>
+                        {{ made_in.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="juice_percentage" class="form-label">Juice Percentage:</label>
+            <input id="juice_percentage" type="number" step="0.1" name="juice_percentage" value="{{ container.juice_percentage }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="material_color" class="form-label">Material Color:</label>
+            <select id="material_color" name="material_color" class="form-select">
+                {% for color in material_color %}
+                    <option value="{{ color.0 }}" {% if container.material_color == color.0 %}selected{% endif %}>
+                        {{ color.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="ribbed" class="form-label">Ribbed:</label>
+            <select id="ribbed" name="ribbed" class="form-select">
+                {% for ribbed in ribbed_types %}
+                    <option value="{{ ribbed.0 }}" {% if container.ribbed == ribbed.0 %}selected{% endif %}>
+                        {{ ribbed.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="ringed" class="form-label">Ringed:</label>
+            <select id="ringed" name="ringed" class="form-select">
+                {% for ringed in ringed_types %}
+                    <option value="{{ ringed.0 }}" {% if container.ringed == ringed.0 %}selected{% endif %}>
+                        {{ ringed.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="visual_volume" class="form-label">Visual Volume:</label>
+            <select id="visual_volume" name="visual_volume" class="form-select">
+                {% for visual_volume in visual_volumes %}
+                    <option value="{{ visual_volume.0 }}" {% if container.visual_volume == visual_volume.0 %}selected{% endif %}>
+                        {{ visual_volume.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">OK</button>
+    </form>
+</div>
+{% endblock %}
+
+<script>
+    // Bootstrap validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>

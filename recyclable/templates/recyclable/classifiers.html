@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Classifiers
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Classifiers</h1>
+
+    <form action="{% url 'recyclable:download_size_classifier' %}" method="get" class="mb-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Download Size Classifier</button>
+    </form>
+
+    <form action="{% url 'recyclable:download_deposit_classifier' %}" method="get">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Download Deposit Classifier</button>
+    </form>
+</div>
+{% endblock %}

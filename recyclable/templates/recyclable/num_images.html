@@ -1,0 +1,100 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Number of Images
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Container {{ barcode }}</h1>
+
+    {% if message %}
+        <p class="alert alert-primary">{{ message }}</p>
+    {% endif %}
+
+    <form action="{% url 'recyclable:image' %}" method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <!-- Hidden fields to pass data -->
+        <input id="container_id" type="hidden" name="container_id" value="{{ container_id }}">
+        <input id="barcode" type="hidden" name="barcode" value="{{ barcode }}">
+
+        <div class="mb-3">
+            <label for="num_images" class="form-label">Number of images to capture:</label>
+            <input id="num_images" type="number" name="num_images" value="100" class="form-control" required>
+            <div class="invalid-feedback">
+                Please enter the number of images.
+            </div>
+        </div>
+
+        <!-- Percentage input fields -->
+        <div class="mb-3">
+            <label for="valid_percentage" class="form-label">Valid (%):</label>
+            <input id="valid_percentage" type="number" name="valid_percentage" value="50" class="form-control" required min="0" max="100">
+        </div>
+
+        <div class="mb-3">
+            <label for="crushed_1_percentage" class="form-label">Crushed 1 (%):</label>
+            <input id="crushed_1_percentage" type="number" name="crushed_1_percentage" value="10" class="form-control" required min="0" max="100">
+        </div>
+
+        <div class="mb-3">
+            <label for="crushed_2_percentage" class="form-label">Crushed 2 (%):</label>
+            <input id="crushed_2_percentage" type="number" name="crushed_2_percentage" value="10" class="form-control" required min="0" max="100">
+        </div>
+
+        <div class="mb-3">
+            <label for="crushed_3_percentage" class="form-label">Crushed 3 (%):</label>
+            <input id="crushed_3_percentage" type="number" name="crushed_3_percentage" value="10" class="form-control" required min="0" max="100">
+        </div>
+
+        <div class="mb-3">
+            <label for="crushed_4_percentage" class="form-label">Crushed 4 (%):</label>
+            <input id="crushed_4_percentage" type="number" name="crushed_4_percentage" value="10" class="form-control" required min="0" max="100">
+        </div>
+
+        <div class="mb-3">
+            <label for="bad_orientation_percentage" class="form-label">Bad Orientation (%):</label>
+            <input id="bad_orientation_percentage" type="number" name="bad_orientation_percentage" value="5" class="form-control" required min="0" max="100">
+        </div>
+
+        <div class="mb-3">
+            <label for="no_label_percentage" class="form-label">No Label (%):</label>
+            <input id="no_label_percentage" type="number" name="no_label_percentage" value="5" class="form-control" required min="0" max="100">
+        </div>
+
+        <button type="submit" class="btn btn-primary">OK</button>
+    </form>
+</div>
+{% endblock %}
+
+<script>
+    // Bootstrap validation script
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                // Sum the percentage fields to ensure they add up to 100%
+                var validPercentage = parseFloat(document.getElementById('valid_percentage').value) || 0;
+                var crushed1Percentage = parseFloat(document.getElementById('crushed_1_percentage').value) || 0;
+                var crushed2Percentage = parseFloat(document.getElementById('crushed_2_percentage').value) || 0;
+                var crushed3Percentage = parseFloat(document.getElementById('crushed_3_percentage').value) || 0;
+                var crushed4Percentage = parseFloat(document.getElementById('crushed_4_percentage').value) || 0;
+                var badOrientationPercentage = parseFloat(document.getElementById('bad_orientation_percentage').value) || 0;
+                var noLabelPercentage = parseFloat(document.getElementById('no_label_percentage').value) || 0;
+                var totalPercentage = validPercentage + crushed1Percentage + crushed2Percentage + crushed3Percentage + crushed4Percentage + badOrientationPercentage + noLabelPercentage;
+
+                if (!form.checkValidity() || Math.abs(totalPercentage - 100) > 0.01) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    if (Math.abs(totalPercentage - 100) > 0.01) {
+                        alert('The percentages must add up to 100%. Currently, they add up to ' + totalPercentage + '%.');
+                    }
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
