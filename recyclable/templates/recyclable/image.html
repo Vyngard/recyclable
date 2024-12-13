@@ -1,0 +1,101 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Capture Image
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Capture Image</h1>
+
+    <p>Container {{ barcode }}</p>
+    <p>Capture image {{ i_image }} of {{ num_images }}</p>
+
+    {% if category == 'valid' %}
+        <h2>You should capture a VALID image</h2>
+    {% elif category == 'crushed_1' %}
+        <h2>You should capture a CRUSHED_1 image</h2>
+    {% elif category == 'crushed_2' %}
+        <h2>You should capture a CRUSHED_2 image</h2>
+    {% elif category == 'crushed_3' %}
+        <h2>You should capture a CRUSHED_3 image</h2>
+    {% elif category == 'crushed_4' %}
+        <h2>You should capture a CRUSHED_4 image</h2>
+    {% elif category == 'bad_orientation' %}
+        <h2>You should capture a BAD ORIENTATION image</h2>
+    {% elif category == 'no_label' %}
+        <h2>You should capture a NO LABEL image</h2>
+    {% else %}
+        <h2>You should capture an image</h2>
+    {% endif %}
+
+    <form id="capture-form" action="{% url 'recyclable:image' %}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="container_id" value="{{ container_id }}">
+        <input type="hidden" name="barcode" value="{{ barcode }}">
+        <input type="hidden" name="i_image" value="{{ i_image }}">
+        <input type="hidden" name="num_images" value="{{ num_images }}">
+
+        <!-- Pass counts as hidden inputs -->
+        {% for name, count in counts_list %}
+            <input type="hidden" name="counts[{{ name }}]" value="{{ count }}">
+        {% endfor %}
+
+        <button id="capture-button" type="button" class="btn btn-primary">Capture Frame</button>
+    </form>
+
+    <video width="432" height="800" id="webcam-preview" autoplay playsinline></video>
+</div>
+    
+<script>
+    // Webcam capture script
+    document.addEventListener('DOMContentLoaded', function () {
+        const video = document.getElementById('webcam-preview');
+        const captureForm = document.getElementById('capture-form');
+        const captureButton = document.getElementById('capture-button');
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: { width: 864, height: 1944 } })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (error) {
+                    console.error('Error accessing the webcam:', error);
+                });
+
+            captureButton.addEventListener('click', function () {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const frameDataUrl = canvas.toDataURL('image/png');
+
+                // Create hidden input fields to hold the frame data and image dimensions
+                const frameDataInput = document.createElement('input');
+                frameDataInput.type = 'hidden';
+                frameDataInput.name = 'frame_data_url';
+                frameDataInput.value = frameDataUrl;
+                captureForm.appendChild(frameDataInput);
+
+                const imageWidthInput = document.createElement('input');
+                imageWidthInput.type = 'hidden';
+                imageWidthInput.name = 'image_width';
+                imageWidthInput.value = canvas.width;
+                captureForm.appendChild(imageWidthInput);
+
+                const imageHeightInput = document.createElement('input');
+                imageHeightInput.type = 'hidden';
+                imageHeightInput.name = 'image_height';
+                imageHeightInput.value = canvas.height;
+                captureForm.appendChild(imageHeightInput);
+
+                captureForm.submit();
+            });
+        } else {
+            console.error('Webcam access not supported in this browser.');
+        }
+    });
+</script>
+
+{% endblock %}

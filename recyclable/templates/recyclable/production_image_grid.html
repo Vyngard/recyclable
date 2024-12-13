@@ -1,0 +1,125 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Production Image Grid{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <!-- Filter Sidebar -->
+    <div class="col-md-3 border-end">
+      <h4 class="mb-3">Filters</h4>
+      
+      <div class="mb-3">
+        <label class="form-label">Material</label>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="aluminum" name="material" value="ALU">
+          <label class="form-check-label" for="aluminum">Aluminum</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="glass" name="material" value="GLS">
+          <label class="form-check-label" for="glass">Glass</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="pet" name="material" value="PET">
+          <label class="form-check-label" for="pet">PET</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Size</label>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="lt24oz" name="size" value="LT24">
+          <label class="form-check-label" for="lt24oz">LT 24oz</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="gte24oz" name="size" value="GTE24">
+          <label class="form-check-label" for="gte24oz">GTE 24oz</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="brand" class="form-label">Brand</label>
+        <input type="text" class="form-control" id="brand">
+      </div>
+
+      <div class="mb-3">
+        <label for="product" class="form-label">Product</label>
+        <input type="text" class="form-control" id="product">
+      </div>
+
+      <div class="mb-3">
+        <label for="upc" class="form-label">UPC</label>
+        <input type="text" class="form-control" id="upc">
+      </div>
+
+      <button id="updateFilters" class="btn btn-primary">Update</button>
+    </div>
+
+    <!-- Image Grid -->
+    <div class="col-md-9">
+      <div class="row row-cols-1 row-cols-md-3 g-4" id="imageGrid">
+        <!-- Images will be dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const updateFilters = document.getElementById('updateFilters');
+        const imageGrid = document.getElementById('imageGrid');
+    
+        function getFilterValues() {
+            return {
+                materials: Array.from(document.querySelectorAll('input[name="material"]:checked')).map(cb => cb.value),
+                sizes: Array.from(document.querySelectorAll('input[name="size"]:checked')).map(cb => cb.value),
+                brand: document.getElementById('brand').value,
+                product: document.getElementById('product').value,
+                upc: document.getElementById('upc').value
+            };
+        }
+    
+        function createImageCard(imageData) {
+            return `
+                <div class="col">
+                    <div class="card">
+                        <img src="${imageData.url}" class="card-img-top" alt="Container Image">
+                        <div class="card-body">
+                            <p class="card-text">${imageData.filename}</p>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="${imageData.id}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    
+        async function fetchImages(filters) {
+            try {
+                const response = await fetch('/recyclable/api/containers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(filters)
+                });
+                const data = await response.json();
+                
+                imageGrid.innerHTML = data.images.map(createImageCard).join('');
+            } catch (error) {
+                console.error('Error fetching images:', error);
+            }
+        }
+    
+        updateFilters.addEventListener('click', () => {
+            const filters = getFilterValues();
+            fetchImages(filters);
+        });
+    
+        // Initial load
+        fetchImages(getFilterValues());
+    });
+</script>
+{% endblock %} 

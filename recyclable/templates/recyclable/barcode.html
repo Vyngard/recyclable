@@ -1,0 +1,44 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Barcode
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Barcode</h1>
+
+    <p class="alert alert-info">
+        {{ message }}
+    </p>
+
+    <form action="{% url 'recyclable:container' %}" method='post' class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="barcode" class="form-label"></label>
+            <input id="barcode" type="text" name="barcode" class="form-control" required>
+            <div class="invalid-feedback">
+                Please enter a barcode.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">OK</button>
+    </form>
+</div>
+{% endblock %}
+
+<script>
+    // Bootstrap validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>

@@ -1,0 +1,7 @@
+__pycache__
+.idea
+*~
+/recyclable-deployment/terraform.tfstate
+/recyclable-deployment/.terraform.lock.hcl
+/recyclable-deployment/.terraform/
+.DS_Store

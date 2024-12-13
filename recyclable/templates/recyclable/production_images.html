@@ -1,0 +1,42 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+    Production Images
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">Production Images</h1>
+  
+  <form class="col-md-6 col-lg-4" action="{% url 'recyclable:production_image_grid' %}" method="GET">
+    <div class="mb-3">
+      <label for="startDate" class="form-label">Start Date</label>
+      <input type="date" class="form-control" id="startDate" name="startDate">
+    </div>
+
+    <div class="mb-3">
+      <label for="endDate" class="form-label">End Date</label>
+      <input type="date" class="form-control" id="endDate" name="endDate">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Deposit Type</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="validDeposit" name="depositType" value="valid">
+        <label class="form-check-label" for="validDeposit">Valid</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="invalidDeposit" name="depositType" value="invalid">
+        <label class="form-check-label" for="invalidDeposit">Invalid</label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="selectCubes" class="form-label">Cubes</label>
+      <textarea class="form-control" id="selectCubes" name="selectCubes" rows="2" placeholder="Gateway 2887&#10;Lucky 762"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-dark w-100">Submit</button>
+  </form>
+</div>
+{% endblock %}
